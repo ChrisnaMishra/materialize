@@ -28,6 +28,12 @@ use thiserror::Error;
 
 use crate::http::WebhookState;
 
+// Validate webhook does not contain invalid characters
+fn is_name_valid(name: &&str) -> bool {
+    let name = *name;
+    !(name == "." || name == ".." || name.contains('\r') || name.contains('\n'))
+}
+
 pub async fn handle_webhook(
     State(WebhookState {
         adapter_client,
@@ -268,6 +274,8 @@ pub enum WebhookError {
     InternalAdapterError(AdapterError),
     #[error("internal failure! {0:?}")]
     Internal(#[from] anyhow::Error),
+    #[error("invalid characters . or .. in webhook source fields")]
+    InvalidName,
 }
 
 impl From<AdapterError> for WebhookError {
@@ -316,6 +324,9 @@ impl IntoResponse for WebhookError {
         match self {
             e @ WebhookError::NotFound(_) | e @ WebhookError::SecretMissing => {
                 (StatusCode::NOT_FOUND, e.to_string()).into_response()
+            }
+            e @ WebhookError::InvalidName => {
+                (StatusCode::BAD_REQUEST, e.to_string()).into_response()
             }
             e @ WebhookError::Unsupported(_)
             | e @ WebhookError::InvalidBody { .. }
