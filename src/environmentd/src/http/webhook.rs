@@ -26,14 +26,6 @@ use bytes::Bytes;
 use http::StatusCode;
 use thiserror::Error;
 
-use crate::http::WebhookState;
-
-// Validate webhook does not contain invalid characters
-fn is_name_valid(name: &&str) -> bool {
-    let name = *name;
-    !(name == "." || name == ".." || name.contains('\r') || name.contains('\n'))
-}
-
 pub async fn handle_webhook(
     State(WebhookState {
         adapter_client,
@@ -43,6 +35,11 @@ pub async fn handle_webhook(
     headers: http::HeaderMap,
     body: Bytes,
 ) -> impl IntoResponse {
+
+    // Record the time we receive the request, for use if validation checks the current timestamp.
+    let received_at = client.now();
+    let conn_id = client.new_conn_id().context("allocate connection id")?;
+
     // Collect headers into a map, while converting them into strings.
     let mut headers_s = BTreeMap::new();
     for (name, val) in headers.iter() {
@@ -274,8 +271,6 @@ pub enum WebhookError {
     InternalAdapterError(AdapterError),
     #[error("internal failure! {0:?}")]
     Internal(#[from] anyhow::Error),
-    #[error("invalid characters . or .. in webhook source fields")]
-    InvalidName,
 }
 
 impl From<AdapterError> for WebhookError {
@@ -324,9 +319,6 @@ impl IntoResponse for WebhookError {
         match self {
             e @ WebhookError::NotFound(_) | e @ WebhookError::SecretMissing => {
                 (StatusCode::NOT_FOUND, e.to_string()).into_response()
-            }
-            e @ WebhookError::InvalidName => {
-                (StatusCode::BAD_REQUEST, e.to_string()).into_response()
             }
             e @ WebhookError::Unsupported(_)
             | e @ WebhookError::InvalidBody { .. }

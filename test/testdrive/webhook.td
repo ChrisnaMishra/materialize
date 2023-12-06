@@ -439,9 +439,7 @@ SELECT id FROM mz_sources WHERE name = 'webhook_bytes';
 # Cleanup.
 > DROP CLUSTER webhook_cluster CASCADE;
 
-<<<<<<< HEAD
 > DROP CLUSTER webhook_compute CASCADE;
-=======
 # Test cases for invalid characters in webhook names
 ! CREATE SOURCE "webhook_invalid_1" IN CLUSTER webhook_cluster FROM WEBHOOK BODY FORMAT TEXT NAME ".";
 
@@ -450,4 +448,3 @@ SELECT id FROM mz_sources WHERE name = 'webhook_bytes';
 ! CREATE SOURCE "webhook_invalid_3" IN CLUSTER webhook_cluster FROM WEBHOOK BODY FORMAT TEXT NAME "test..";
 
 ! CREATE SOURCE "webhook_invalid_4" IN CLUSTER webhook_cluster FROM WEBHOOK BODY FORMAT TEXT NAME ".test";
->>>>>>> 8a85d93952 (Invalid webhook characters)
