@@ -150,7 +150,6 @@ fn is_name_valid(name: &str) -> bool {
     is_valid
 }
 
-
 pub fn describe_create_database(
     _: &StatementContext,
     _: CreateDatabaseStatement,
