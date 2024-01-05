@@ -659,7 +659,7 @@ impl fmt::Display for PlanError {
                 "could not determine polymorphic type because input has type unknown"
             ),
             Self::ShowCommandInView => f.write_str("SHOW commands are not allowed in views"),
-            Self::InvalidWebhookName => f.write_str("webhook names must be alphanumeric, plus underscores, dashes and forward slashes"),
+            Self::InvalidWebhookName => f.write_str("Webhook names may not contain periods"),
             Self::WebhookValidationDoesNotUseColumns => f.write_str(
                 "expression provided in CHECK does not reference any columns"
             ),
