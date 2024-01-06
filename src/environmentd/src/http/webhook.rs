@@ -26,6 +26,8 @@ use bytes::Bytes;
 use http::StatusCode;
 use thiserror::Error;
 
+use crate::http::WebhookState;
+
 pub async fn handle_webhook(
     State(WebhookState {
         adapter_client,
@@ -35,10 +37,6 @@ pub async fn handle_webhook(
     headers: http::HeaderMap,
     body: Bytes,
 ) -> impl IntoResponse {
-    // Record the time we receive the request, for use if validation checks the current timestamp.
-    let received_at = client.now();
-    let conn_id = client.new_conn_id().context("allocate connection id")?;
-
     // Collect headers into a map, while converting them into strings.
     let mut headers_s = BTreeMap::new();
     for (name, val) in headers.iter() {
