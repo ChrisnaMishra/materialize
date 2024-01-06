@@ -436,8 +436,6 @@ SELECT id FROM mz_sources WHERE name = 'webhook_bytes';
 > SELECT COUNT(*) FROM mz_internal.mz_storage_shards WHERE object_id = '${webhook-source-id}';
 0
 
-<<<<<<< HEAD
-=======
 # Test cases for invalid characters in webhook names
 ! CREATE SOURCE "period.test." IN CLUSTER webhook_cluster FROM WEBHOOK BODY FORMAT TEXT;
 exact:Webhook names may not contain periods
@@ -445,16 +443,8 @@ exact:Webhook names may not contain periods
 ! CREATE SOURCE "period..test." IN CLUSTER webhook_cluster FROM WEBHOOK BODY FORMAT TEXT;
 exact:Webhook names may not contain periods
 
->>>>>>> ca02898921 (Updated approach, tests, docs)
 # Cleanup.
 > DROP CLUSTER webhook_cluster CASCADE;
 
 > DROP CLUSTER webhook_compute CASCADE;
 # Test cases for invalid characters in webhook names
-! CREATE SOURCE "webhook_invalid_1" IN CLUSTER webhook_cluster FROM WEBHOOK BODY FORMAT TEXT NAME ".";
-
-! CREATE SOURCE "webhook_invalid_2" IN CLUSTER webhook_cluster FROM WEBHOOK BODY FORMAT TEXT NAME "..";
-
-! CREATE SOURCE "webhook_invalid_3" IN CLUSTER webhook_cluster FROM WEBHOOK BODY FORMAT TEXT NAME "test..";
-
-! CREATE SOURCE "webhook_invalid_4" IN CLUSTER webhook_cluster FROM WEBHOOK BODY FORMAT TEXT NAME ".test";
