@@ -339,7 +339,7 @@ pub enum IdentError {
         attempts: usize,
     },
 
-    #[error("invalid identifier: '{}'", .0)]
+    #[error("invalid identifier: {}", .0.quoted())]
     WouldCausePathTraversalInUrl(String),
 }
 
