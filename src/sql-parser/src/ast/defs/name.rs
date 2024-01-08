@@ -60,6 +60,11 @@ impl Ident {
             return Err(IdentError::TooLong(s));
         }
 
+        // Add a condition to check if the name is '.' or '..'
+        if s == "." || s == ".." {
+            return Err(IdentError::InvalidName(s));
+        }
+
         Ok(Ident(s))
     }
 
@@ -333,6 +338,9 @@ pub enum IdentError {
         suffix: String,
         attempts: usize,
     },
+
+    #[error("invalid identifier: '{}'", .0)]
+    InvalidName(String),
 }
 
 /// A name of a table, view, custom type, etc. that lives in a schema, possibly multi-part, i.e. db.schema.obj
