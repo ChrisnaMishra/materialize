@@ -340,7 +340,7 @@ pub enum IdentError {
     },
 
     #[error("invalid identifier: '{}'", .0)]
-    InvalidName(String),
+    WouldCausePathTraversalInUrl(String),
 }
 
 /// A name of a table, view, custom type, etc. that lives in a schema, possibly multi-part, i.e. db.schema.obj
