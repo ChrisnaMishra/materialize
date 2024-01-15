@@ -62,7 +62,7 @@ impl Ident {
 
         // Add a condition to check if the name is '.' or '..'
         if s == "." || s == ".." {
-            return Err(IdentError::InvalidName(s));
+            return Err(IdentError::WouldCausePathTraversalInUrl(s));
         }
 
         Ok(Ident(s))
