@@ -142,14 +142,6 @@ const MAX_NUM_COLUMNS: usize = 256;
 const MANAGED_REPLICA_PATTERN: once_cell::sync::Lazy<regex::Regex> =
     once_cell::sync::Lazy::new(|| regex::Regex::new(r"^r(\d)+$").unwrap());
 
-// Validate webhook does not contain invalid characters
-fn is_name_valid(name: &str) -> bool {
-    let contains_period = name.contains('.');
-    let is_dot_or_dotdot = name == "." || name == "..";
-    let is_valid = !(contains_period || is_dot_or_dotdot);
-    is_valid
-}
-
 pub fn describe_create_database(
     _: &StatementContext,
     _: CreateDatabaseStatement,
@@ -436,13 +428,6 @@ pub fn plan_create_webhook_source(
         validate_using,
         in_cluster,
     } = stmt;
-
-    for ident in name.0.iter() {
-        let name_str = ident.as_str();
-        if !is_name_valid(name_str) {
-            return Err(PlanError::InvalidWebhookName);
-        }
-    }
 
     let validate_using = validate_using
         .map(|stmt| query::plan_webhook_validate_using(scx, stmt))

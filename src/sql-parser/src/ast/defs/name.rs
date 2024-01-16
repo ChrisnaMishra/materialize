@@ -49,6 +49,12 @@ impl Ident {
     ///
     /// let too_long_id = Ident::new(too_long);
     /// assert!(too_long_id.is_err());
+    ///
+    /// let invalid_name_dot = Ident::new(".");
+    /// assert!(invalid_name_dot.is_err());
+    ///
+    /// let invalid_name_dot_dot = Ident::new("..");
+    /// assert!(invalid_name_dot_dot.is_err());
     /// ```
     ///
     pub fn new<S>(value: S) -> Result<Self, IdentError>
