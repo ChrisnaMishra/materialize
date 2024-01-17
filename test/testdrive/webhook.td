@@ -440,4 +440,3 @@ SELECT id FROM mz_sources WHERE name = 'webhook_bytes';
 > DROP CLUSTER webhook_cluster CASCADE;
 
 > DROP CLUSTER webhook_compute CASCADE;
-# Test cases for invalid characters in webhook names
